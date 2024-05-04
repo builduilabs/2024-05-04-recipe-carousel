@@ -122,7 +122,7 @@ function Thumbnails({
           aspectRatio: FULL_ASPECT_RATIO,
           gap: `${GAP}%`,
         }}
-        className="flex"
+        className="flex min-w-0"
       >
         {images.map((image, i) => (
           <motion.button
@@ -141,7 +141,7 @@ function Thumbnails({
                 marginRight: 0,
               },
             }}
-            className={`${i === index ? "" : "grayscale hover:grayscale-0"} shrink-0 transition will-change-[filter]`}
+            className={`${i === index ? "" : "grayscale hover:grayscale-0"} h-full shrink-0 transition will-change-[filter]`}
             key={image}
           >
             <img alt="" src={image} className="h-full object-cover" />
