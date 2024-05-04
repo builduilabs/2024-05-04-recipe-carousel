@@ -5,30 +5,19 @@ import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 let images = [
-  "/images/1.jpeg",
-  "/images/2.jpeg",
-  "/images/3.jpeg",
-  "/images/4.jpeg",
-  "/images/5.jpeg",
-  "/images/6.jpeg",
-  "/images/1.jpeg?1",
-  "/images/2.jpeg?1",
-  "/images/3.jpeg?1",
-  "/images/4.jpeg?1",
-  "/images/5.jpeg?1",
-  "/images/6.jpeg?1",
-  "/images/1.jpeg?2",
-  "/images/2.jpeg?2",
-  "/images/3.jpeg?2",
-  "/images/4.jpeg?2",
-  "/images/5.jpeg?2",
-  "/images/6.jpeg?2",
-  "/images/1.jpeg?3",
-  "/images/2.jpeg?3",
-  "/images/3.jpeg?3",
-  "/images/4.jpeg?3",
-  "/images/5.jpeg?3",
-  "/images/6.jpeg?3",
+  "/images/2.jpg",
+  "/images/4.jpg",
+  "/images/3.jpg",
+  "/images/1.jpg",
+  "/images/5.jpg",
+  "/images/7.jpg",
+  "/images/8.jpg",
+  "/images/6.jpg",
+  "/images/9.jpg",
+  "/images/10.jpg",
+  "/images/11.jpg",
+  "/images/12.jpg",
+  "/images/13.jpg",
 ];
 
 let collapsedAspectRatio = 1 / 3;
@@ -70,7 +59,7 @@ export default function Carousel() {
                   key={image}
                   src={image}
                   animate={{ opacity: i === index ? 1 : 0.3 }}
-                  className="aspect-[3/2] object-cover w-full"
+                  className="aspect-[960/402] max-h-[70vh] object-cover w-full flex-shrink-0"
                 />
               ))}
             </motion.div>
@@ -106,7 +95,7 @@ export default function Carousel() {
             </AnimatePresence>
           </div>
 
-          <div className="absolute inset-x-0 bottom-6 flex h-14 justify-center overflow-hidden">
+          <div className="absolute inset-x-0 bg-black bg-[linear-gradient(to_bottom,transparent,rgba(0,0,0,.8)_50%)] bottom-0 py-6 flex h-24 justify-center overflow-hidden">
             <motion.div
               initial={false}
               animate={{
@@ -126,23 +115,20 @@ export default function Carousel() {
                 <motion.button
                   onClick={() => setIndex(i)}
                   initial={false}
-                  whileHover={{ opacity: 1 }}
                   animate={i === index ? "active" : "inactive"}
                   variants={{
                     active: {
                       aspectRatio: fullAspectRatio,
                       marginLeft: `${margin}%`,
                       marginRight: `${margin}%`,
-                      opacity: 1,
                     },
                     inactive: {
                       aspectRatio: collapsedAspectRatio,
                       marginLeft: 0,
                       marginRight: 0,
-                      opacity: 0.5,
                     },
                   }}
-                  className="shrink-0"
+                  className={`${i === index ? "" : "grayscale hover:grayscale-0"} transition shrink-0 will-change-[filter]`}
                   key={image}
                 >
                   <img alt="" src={image} className="h-full object-cover" />

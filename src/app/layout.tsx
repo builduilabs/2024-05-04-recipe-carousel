@@ -15,8 +15,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} bg-black text-gray-200 antialiased`}>
+    <html lang="en" className="h-full">
+      <body
+        className={`${inter.className} h-full bg-black text-gray-200 antialiased`}
+      >
         {children}
       </body>
     </html>
