@@ -5,8 +5,8 @@ import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 let images = [
-  "/images/2.jpg",
   "/images/4.jpg",
+  "/images/2.jpg",
   "/images/3.jpg",
   "/images/1.jpg",
   "/images/5.jpg",
@@ -19,11 +19,6 @@ let images = [
   "/images/12.jpg",
   "/images/13.jpg",
 ];
-
-let collapsedAspectRatio = 1 / 3;
-let fullAspectRatio = 3 / 2;
-let margin = 12;
-let gap = 2;
 
 export default function Carousel() {
   let [index, setIndex] = useState(0);
@@ -50,15 +45,15 @@ export default function Carousel() {
 
   return (
     <MotionConfig transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}>
-      <div className="flex h-full max-w-7xl flex-col justify-between">
-        <div className="relative mt-10 overflow-hidden">
+      <div className="flex h-full flex-col justify-between">
+        <div className="relative mt-6 overflow-hidden md:mt-10">
           <motion.div animate={{ x: `-${index * 100}%` }} className="flex">
             {images.map((image, i) => (
               <motion.img
                 key={image}
                 src={image}
                 animate={{ opacity: i === index ? 1 : 0.3 }}
-                className="aspect-[960/402] max-h-[70vh] w-full flex-shrink-0 object-cover"
+                className="aspect-[1.85] h-screen max-h-[70vh] w-full flex-shrink-0 object-cover"
               />
             ))}
           </motion.div>
@@ -94,48 +89,65 @@ export default function Carousel() {
           </AnimatePresence>
         </div>
 
-        <div className="mb-6 flex h-12 justify-center overflow-hidden">
-          <motion.div
-            initial={false}
-            animate={{
-              x: `-${
-                index * 100 * (collapsedAspectRatio / fullAspectRatio) +
-                margin +
-                index * gap
-              }%`,
-            }}
-            style={{
-              aspectRatio: fullAspectRatio,
-              gap: `${gap}%`,
-            }}
-            className="flex"
-          >
-            {images.map((image, i) => (
-              <motion.button
-                onClick={() => setIndex(i)}
-                initial={false}
-                animate={i === index ? "active" : "inactive"}
-                variants={{
-                  active: {
-                    aspectRatio: fullAspectRatio,
-                    marginLeft: `${margin}%`,
-                    marginRight: `${margin}%`,
-                  },
-                  inactive: {
-                    aspectRatio: collapsedAspectRatio,
-                    marginLeft: 0,
-                    marginRight: 0,
-                  },
-                }}
-                className={`${i === index ? "" : "grayscale hover:grayscale-0"} shrink-0 transition will-change-[filter]`}
-                key={image}
-              >
-                <img alt="" src={image} className="h-full object-cover" />
-              </motion.button>
-            ))}
-          </motion.div>
-        </div>
+        <Thumbnails index={index} setIndex={setIndex} />
       </div>
     </MotionConfig>
+  );
+}
+
+const COLLAPSED_ASPECT_RATIO = 1 / 3;
+const FULL_ASPECT_RATIO = 3 / 2;
+const MARGIN = 12;
+const GAP = 2;
+
+function Thumbnails({
+  index,
+  setIndex,
+}: {
+  index: number;
+  setIndex: (value: number) => void;
+}) {
+  return (
+    <div className="mb-6 flex h-12 justify-center overflow-hidden">
+      <motion.div
+        initial={false}
+        animate={{
+          x: `-${
+            index * 100 * (COLLAPSED_ASPECT_RATIO / FULL_ASPECT_RATIO) +
+            MARGIN +
+            index * GAP
+          }%`,
+        }}
+        style={{
+          aspectRatio: FULL_ASPECT_RATIO,
+          gap: `${GAP}%`,
+        }}
+        className="flex"
+      >
+        {images.map((image, i) => (
+          <motion.button
+            onClick={() => setIndex(i)}
+            initial={false}
+            animate={i === index ? "active" : "inactive"}
+            variants={{
+              active: {
+                aspectRatio: FULL_ASPECT_RATIO,
+                marginLeft: `${MARGIN}%`,
+                marginRight: `${MARGIN}%`,
+              },
+              inactive: {
+                aspectRatio: COLLAPSED_ASPECT_RATIO,
+                marginLeft: 0,
+                marginRight: 0,
+              },
+            }}
+            className={`${i === index ? "" : "grayscale hover:grayscale-0"} shrink-0 transition will-change-[filter]`}
+            key={image}
+          >
+            <img alt="" src={image} className="h-full object-cover" />
+          </motion.button>
+        ))}
+      </motion.div>
+    </div>
   );
 }
