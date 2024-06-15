@@ -1,7 +1,13 @@
 "use client";
 
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
-import { AnimatePresence, MotionConfig, motion } from "framer-motion";
+import {
+  AnimatePresence,
+  MotionConfig,
+  motion,
+  useMotionTemplate,
+  useSpring,
+} from "framer-motion";
 import { useEffect, useState } from "react";
 
 let images = [
@@ -22,6 +28,14 @@ let images = [
 
 export default function Carousel() {
   let [index, setIndex] = useState(0);
+
+  let x = index * 100;
+  let xSpring = useSpring(x, { bounce: 0 });
+  let xPercentage = useMotionTemplate`-${xSpring}%`;
+
+  useEffect(() => {
+    xSpring.set(x);
+  }, [x, xSpring]);
 
   useEffect(() => {
     function handleKeyPress(e: KeyboardEvent) {
@@ -44,15 +58,15 @@ export default function Carousel() {
   }, [index]);
 
   return (
-    <MotionConfig transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}>
+    <MotionConfig transition={{ type: "spring", bounce: 0 }}>
       <div className="flex h-full flex-col justify-between">
         <div className="relative mt-6 overflow-hidden md:mt-10">
-          <motion.div animate={{ x: `-${index * 100}%` }} className="flex">
+          <motion.div style={{ x: xPercentage }} className="flex">
             {images.map((image, i) => (
               <motion.img
                 key={image}
                 src={image}
-                animate={{ opacity: i === index ? 1 : 0.3 }}
+                animate={{ opacity: i === index ? 1 : 0.4 }}
                 className="aspect-[1.85] h-screen max-h-[70vh] w-full flex-shrink-0 object-cover"
               />
             ))}
@@ -95,10 +109,10 @@ export default function Carousel() {
   );
 }
 
-const COLLAPSED_ASPECT_RATIO = 1 / 3;
+const COLLAPSED_ASPECT_RATIO = 3 / 4;
 const FULL_ASPECT_RATIO = 3 / 2;
-const MARGIN = 12;
-const GAP = 2;
+const MARGIN = 16;
+const GAP = 4;
 
 function Thumbnails({
   index,
@@ -107,20 +121,24 @@ function Thumbnails({
   index: number;
   setIndex: (value: number) => void;
 }) {
+  let x =
+    index * 100 * (COLLAPSED_ASPECT_RATIO / FULL_ASPECT_RATIO) +
+    MARGIN +
+    index * GAP;
+  let xSpring = useSpring(x, { bounce: 0 });
+  let xPercentage = useMotionTemplate`-${xSpring}%`;
+
+  useEffect(() => {
+    xSpring.set(x);
+  }, [x, xSpring]);
+
   return (
     <div className="mb-6 flex h-12 justify-center overflow-hidden">
       <motion.div
-        initial={false}
-        animate={{
-          x: `-${
-            index * 100 * (COLLAPSED_ASPECT_RATIO / FULL_ASPECT_RATIO) +
-            MARGIN +
-            index * GAP
-          }%`,
-        }}
         style={{
           aspectRatio: FULL_ASPECT_RATIO,
           gap: `${GAP}%`,
+          x: xPercentage,
         }}
         className="flex min-w-0"
       >
@@ -141,7 +159,7 @@ function Thumbnails({
                 marginRight: 0,
               },
             }}
-            className={`${i === index ? "" : "grayscale hover:grayscale-0"} h-full shrink-0 transition will-change-[filter]`}
+            className="h-full shrink-0"
             key={image}
           >
             <img alt="" src={image} className="h-full object-cover" />
