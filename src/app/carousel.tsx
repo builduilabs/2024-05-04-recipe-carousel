@@ -109,10 +109,10 @@ export default function Carousel() {
   );
 }
 
-const COLLAPSED_ASPECT_RATIO = 3 / 4;
+const COLLAPSED_ASPECT_RATIO = 0.5;
 const FULL_ASPECT_RATIO = 3 / 2;
-const MARGIN = 16;
-const GAP = 4;
+const MARGIN = 24;
+const GAP = 2;
 
 function Thumbnails({
   index,
