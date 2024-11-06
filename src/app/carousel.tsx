@@ -143,29 +143,50 @@ function Thumbnails({
         className="flex min-w-0"
       >
         {images.map((image, i) => (
-          <motion.button
-            onClick={() => setIndex(i)}
-            initial={false}
-            animate={i === index ? "active" : "inactive"}
-            variants={{
-              active: {
-                aspectRatio: FULL_ASPECT_RATIO,
-                marginLeft: `${MARGIN}%`,
-                marginRight: `${MARGIN}%`,
-              },
-              inactive: {
-                aspectRatio: COLLAPSED_ASPECT_RATIO,
-                marginLeft: 0,
-                marginRight: 0,
-              },
-            }}
-            className="h-full shrink-0"
+          <Thumbnail
             key={image}
-          >
-            <img alt="" src={image} className="h-full object-cover" />
-          </motion.button>
+            i={i}
+            onClick={() => setIndex(i)}
+            index={index}
+            image={image}
+          />
         ))}
       </motion.div>
     </div>
+  );
+}
+
+function Thumbnail({
+  image,
+  index,
+  i,
+  onClick,
+}: {
+  image: string;
+  index: number;
+  i: number;
+  onClick: () => void;
+}) {
+  let aspectRatio = useSpring(
+    i === index ? FULL_ASPECT_RATIO : COLLAPSED_ASPECT_RATIO,
+    { bounce: 0 },
+  );
+  let margin = useSpring(i === index ? MARGIN : 0, { bounce: 0 });
+  let marginP = useMotionTemplate`${margin}%`;
+
+  useEffect(() => {
+    aspectRatio.set(i === index ? FULL_ASPECT_RATIO : COLLAPSED_ASPECT_RATIO);
+    margin.set(i === index ? MARGIN : 0);
+  }, [aspectRatio, i, index, margin]);
+
+  return (
+    <motion.button
+      onClick={onClick}
+      initial={false}
+      style={{ aspectRatio, marginLeft: marginP, marginRight: marginP }}
+      className="h-full shrink-0"
+    >
+      <img alt="" src={image} className="h-full object-cover" />
+    </motion.button>
   );
 }
